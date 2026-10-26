@@ -1,0 +1,23 @@
+{
+  "name": "m4_omnimmi",
+  "upstream": {
+    "url": "https://github.com/OmniMMI/M4.git",
+    "commit": "574d2244576190cd150cd28aaaa8dbd2ea7502e6",
+    "license": "MIT",
+    "installation_url": "https://github.com/OmniMMI/M4/blob/574d2244576190cd150cd28aaaa8dbd2ea7502e6/README.md"
+  },
+  "required_files": [
+    "intersuit/local_demo/inference.py",
+    "intersuit/local_demo/arguments_live.py",
+    "intersuit/intersuit/model/language_model/llava_qwen.py"
+  ],
+  "raw_directory": "M4",
+  "parser": "strict_literal",
+  "working_directory": "intersuit",
+  "default_args": [],
+  "paper_fps": 1,
+  "source_directories": [
+    "intersuit"
+  ],
+  "vision_checkpoint": "openai/clip-vit-large-patch14-336"
+}

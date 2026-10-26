@@ -1,0 +1,22 @@
+{
+  "name": "videollm_online",
+  "upstream": {
+    "url": "https://github.com/showlab/videollm-online.git",
+    "commit": "cfbd7ce808a9ec666264b704a73c5db596705098",
+    "license": "Apache-2.0",
+    "installation_url": "https://github.com/showlab/videollm-online/blob/cfbd7ce808a9ec666264b704a73c5db596705098/README.md"
+  },
+  "required_files": [
+    "models/modeling_live.py",
+    "models/tokenization_live.py",
+    "models/vision_live.py"
+  ],
+  "raw_directory": "videollm_online",
+  "parser": "action_level",
+  "working_directory": ".",
+  "default_args": [],
+  "paper_fps": 2,
+  "source_directories": [
+    "models"
+  ]
+}

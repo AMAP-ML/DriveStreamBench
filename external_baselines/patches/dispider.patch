@@ -1,0 +1,28 @@
+--- a/dispider/model/multimodal_projector/modeling_sampler.py
++++ b/dispider/model/multimodal_projector/modeling_sampler.py
+@@ -25,10 +25,13 @@
+ )
+ from transformers.modeling_utils import (
+     PreTrainedModel,
+-    apply_chunking_to_forward,
+     find_pruneable_heads_and_indices,
+     prune_linear_layer,
+ )
++try:
++    from transformers.pytorch_utils import apply_chunking_to_forward
++except ImportError:  # transformers < 5 keeps this helper in modeling_utils
++    from transformers.modeling_utils import apply_chunking_to_forward
+ from transformers.models.bert.configuration_bert import BertConfig
+ from transformers.utils import logging
+ 
+--- a/dispider/model/language_model/builder.py
++++ b/dispider/model/language_model/builder.py
+@@ -159,7 +159,7 @@
+ 
+ 
+ def build_compressor(compressor_cfg):
+-    compressor = getattr(compressor_cfg, 'mm_compressor', getattr(compressor_cfg, 'compressor', None))
++    compressor = os.environ.get('DSB_DISPIDER_COMPRESSOR') or getattr(compressor_cfg, 'mm_compressor', getattr(compressor_cfg, 'compressor', None))
+     is_absolute_path_exists = os.path.exists(compressor)
+     if is_absolute_path_exists:
+         if 'stream' in compressor:

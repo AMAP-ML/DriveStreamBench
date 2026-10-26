@@ -1,0 +1,21 @@
+{
+  "name": "simplestream",
+  "upstream": {
+    "url": "https://github.com/EvolvingLMMs-Lab/SimpleStream.git",
+    "commit": "be227ee8ce90a258b286a34161688c2a59eeeadb",
+    "license": "See upstream terms",
+    "installation_url": "https://github.com/EvolvingLMMs-Lab/SimpleStream/blob/be227ee8ce90a258b286a34161688c2a59eeeadb/README.md"
+  },
+  "required_files": [
+    "lib/recent_window_eval.py",
+    "ovo_constants.py"
+  ],
+  "raw_directory": "SimpleStream",
+  "parser": "action_level",
+  "working_directory": ".",
+  "default_args": [],
+  "paper_fps": 1,
+  "source_directories": [
+    "lib"
+  ]
+}

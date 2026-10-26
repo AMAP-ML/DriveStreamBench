@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://drivestreambench/manifests/schema.json",
+  "title": "DriveStreamBench evaluation manifest",
+  "description": "Evaluation settings and output paths for a model run.",
+  "type": "object",
+  "required": [
+    "manifest_version",
+    "benchmark",
+    "benchmark_version",
+    "split",
+    "model_name",
+    "protocol",
+    "decision_cadence_hz",
+    "fps",
+    "frames_per_turn",
+    "prediction_jsonl"
+  ],
+  "properties": {
+    "manifest_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "created_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "host": {
+      "type": "string"
+    },
+    "python": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string"
+    },
+    "benchmark": {
+      "type": "string",
+      "const": "DriveStreamBench"
+    },
+    "benchmark_version": {
+      "type": "string"
+    },
+    "split": {
+      "type": "string",
+      "enum": [
+        "l4_core_train",
+        "l4_core_test",
+        "l4_ood",
+        "l1_train",
+        "l1_test",
+        "l2_train",
+        "l2_test",
+        "l3_train",
+        "l3_test",
+        "l13_test",
+        "l4_short_test",
+        ""
+      ]
+    },
+    "parser": {
+      "type": "string",
+      "enum": [
+        "strict_literal",
+        "action_level"
+      ],
+      "description": "Output parser: strict_literal for instruction-following models; action_level for streaming models with free-form alert actions."
+    },
+    "model_name": {
+      "type": "string"
+    },
+    "model_checkpoint": {
+      "type": "string"
+    },
+    "model_checkpoint_hash": {
+      "type": "string"
+    },
+    "protocol": {
+      "type": "string",
+      "enum": [
+        "mode_alpha",
+        "native_streaming"
+      ]
+    },
+    "decision_cadence_hz": {
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 10.0
+    },
+    "fps": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "frames_per_turn": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "temperature": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 2.0
+    },
+    "max_new_tokens": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1024
+    },
+    "framework": {
+      "type": "string"
+    },
+    "framework_version": {
+      "type": "string"
+    },
+    "hardware": {
+      "type": "string"
+    },
+    "precision": {
+      "type": "string",
+      "enum": [
+        "fp32",
+        "fp16",
+        "bf16",
+        "int8",
+        "int4",
+        "vendor-managed",
+        ""
+      ]
+    },
+    "prediction_jsonl": {
+      "type": "string"
+    },
+    "score_json": {
+      "type": "string"
+    },
+    "median_latency_ms": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "p95_latency_ms": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "rtf_mean": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "extra": {
+      "type": "object"
+    }
+  }
+}

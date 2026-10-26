@@ -1,0 +1,22 @@
+{
+  "name": "mmduet2",
+  "upstream": {
+    "url": "https://github.com/yellow-binary-tree/MMDuet2.git",
+    "commit": "7bd91d5239adcb273df0977bc6c23faff950912c",
+    "license": "Apache-2.0",
+    "installation_url": "https://github.com/yellow-binary-tree/MMDuet2/blob/7bd91d5239adcb273df0977bc6c23faff950912c/README.md"
+  },
+  "required_files": [
+    "proactive_eval/qwen2_5_vl/modeling_qwen2_5_vl_DTD.py",
+    "train/qwen_vl_utils/vision_process.py"
+  ],
+  "raw_directory": "mmduet2",
+  "parser": "action_level",
+  "working_directory": "proactive_eval",
+  "default_args": [],
+  "paper_fps": 1,
+  "source_directories": [
+    "proactive_eval",
+    "train/qwen_vl_utils"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "streamforest",
+  "upstream": {
+    "url": "https://github.com/MCG-NJU/StreamForest.git",
+    "commit": "f9d14670ff451ff5865638e17c9958e99bf2fec5",
+    "license": "Apache-2.0",
+    "installation_url": "https://github.com/MCG-NJU/StreamForest/blob/f9d14670ff451ff5865638e17c9958e99bf2fec5/README.md"
+  },
+  "required_files": [
+    "llava/model/builder.py",
+    "llava/mm_utils.py"
+  ],
+  "raw_directory": "StreamForest",
+  "parser": "action_level",
+  "working_directory": ".",
+  "default_args": [],
+  "paper_fps": 1,
+  "source_directories": [
+    "llava"
+  ],
+  "vision_checkpoint": "google/siglip-so400m-patch14-384"
+}

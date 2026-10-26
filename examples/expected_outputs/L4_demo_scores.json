@@ -1,0 +1,184 @@
+{
+  "n_total": 5,
+  "n_pos": 3,
+  "n_neg": 2,
+  "taus": [
+    1.0,
+    2.0,
+    3.0,
+    5.0
+  ],
+  "per_subcategory": {
+    "lead_vehicle_start": {
+      "n_total": 2,
+      "n_pos": 1,
+      "n_neg": 1,
+      "nsr": 1.0,
+      "fa_rate": 0.0,
+      "n_silent_neg": 1,
+      "by_tau": {
+        "1.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 1,
+          "alert_score": 0.0
+        },
+        "2.0": {
+          "hit_rate": 1.0,
+          "hits": 1,
+          "n_positives": 1,
+          "alert_score": 1.0
+        },
+        "3.0": {
+          "hit_rate": 1.0,
+          "hits": 1,
+          "n_positives": 1,
+          "alert_score": 1.0
+        },
+        "5.0": {
+          "hit_rate": 1.0,
+          "hits": 1,
+          "n_positives": 1,
+          "alert_score": 1.0
+        }
+      }
+    },
+    "lead_vehicle_brake": {
+      "n_total": 1,
+      "n_pos": 1,
+      "n_neg": 0,
+      "nsr": 1.0,
+      "fa_rate": 0.0,
+      "n_silent_neg": 0,
+      "by_tau": {
+        "1.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 1,
+          "alert_score": 0.0
+        },
+        "2.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 1,
+          "alert_score": 0.0
+        },
+        "3.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 1,
+          "alert_score": 0.0
+        },
+        "5.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 1,
+          "alert_score": 0.0
+        }
+      }
+    },
+    "adjacent_cut_in": {
+      "n_total": 1,
+      "n_pos": 1,
+      "n_neg": 0,
+      "nsr": 1.0,
+      "fa_rate": 0.0,
+      "n_silent_neg": 0,
+      "by_tau": {
+        "1.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 1,
+          "alert_score": 0.0
+        },
+        "2.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 1,
+          "alert_score": 0.0
+        },
+        "3.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 1,
+          "alert_score": 0.0
+        },
+        "5.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 1,
+          "alert_score": 0.0
+        }
+      }
+    },
+    "vru_crossing": {
+      "n_total": 1,
+      "n_pos": 0,
+      "n_neg": 1,
+      "nsr": 1.0,
+      "fa_rate": 0.0,
+      "n_silent_neg": 1,
+      "by_tau": {
+        "1.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 0,
+          "alert_score": 0.0
+        },
+        "2.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 0,
+          "alert_score": 0.0
+        },
+        "3.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 0,
+          "alert_score": 0.0
+        },
+        "5.0": {
+          "hit_rate": 0.0,
+          "hits": 0,
+          "n_positives": 0,
+          "alert_score": 0.0
+        }
+      }
+    }
+  },
+  "core_macro": {
+    "cats": [
+      "lead_vehicle_start",
+      "lead_vehicle_brake",
+      "adjacent_cut_in",
+      "vru_crossing"
+    ],
+    "n_cats": 4,
+    "by_tau": {
+      "1.0": {
+        "macro_hit": 0.0,
+        "core_macro": 0.0
+      },
+      "2.0": {
+        "macro_hit": 0.25,
+        "core_macro": 0.25
+      },
+      "3.0": {
+        "macro_hit": 0.25,
+        "core_macro": 0.25
+      },
+      "5.0": {
+        "macro_hit": 0.25,
+        "core_macro": 0.25
+      }
+    },
+    "macro_nsr": 1.0,
+    "macro_fa_rate": 0.0
+  },
+  "primary_metric": {
+    "name": "Core Macro AlertScore@2.0s",
+    "value": 0.25
+  },
+  "annotation_file": "examples/toy_annotations/L4_demo.jsonl",
+  "prediction_file": "examples/toy_predictions/L4_demo_predictions.jsonl"
+}

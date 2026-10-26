@@ -1,0 +1,49 @@
+{
+  "_comment": "DeepSpeed ZeRO-3 config used by drivestreambench/training/train_sft.py for the DriveStream-SFT reference baseline (paper §5.5). Tuned for 8B Qwen3-VL bf16 on 8x48GB GPUs with image-heavy multimodal inputs; tweak `train_micro_batch_size_per_gpu` if you raise --batch-size or shorten --max-length. All 'auto' fields are resolved by ms-swift / TRL at launch time from the matching CLI flags.",
+
+  "fp16": { "enabled": false },
+  "bf16": { "enabled": true },
+
+  "zero_optimization": {
+    "stage": 3,
+    "offload_optimizer": { "device": "none" },
+    "offload_param":     { "device": "none" },
+    "overlap_comm": true,
+    "contiguous_gradients": true,
+    "reduce_bucket_size":          "auto",
+    "stage3_prefetch_bucket_size": "auto",
+    "stage3_param_persistence_threshold": "auto",
+    "stage3_max_live_parameters":  1000000000,
+    "stage3_max_reuse_distance":   1000000000,
+    "stage3_gather_16bit_weights_on_model_save": true,
+    "sub_group_size": 100000000
+  },
+
+  "gradient_accumulation_steps":      "auto",
+  "gradient_clipping":                1.0,
+  "train_batch_size":                 "auto",
+  "train_micro_batch_size_per_gpu":   "auto",
+  "wall_clock_breakdown": false,
+
+  "steps_per_print": 50,
+
+  "scheduler": {
+    "type": "WarmupDecayLR",
+    "params": {
+      "total_num_steps":  "auto",
+      "warmup_min_lr":    0,
+      "warmup_max_lr":    "auto",
+      "warmup_num_steps": "auto"
+    }
+  },
+
+  "optimizer": {
+    "type": "AdamW",
+    "params": {
+      "lr":           "auto",
+      "betas":        [0.9, 0.999],
+      "eps":          1e-8,
+      "weight_decay": "auto"
+    }
+  }
+}

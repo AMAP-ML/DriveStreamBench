@@ -1,0 +1,13 @@
+--- a/llava/__init__.py
++++ b/llava/__init__.py
+@@ -1,2 +1,7 @@
+ from .model import LlavaQwenForCausalLM
+-from .train.train import LazySupervisedDataset, DataCollatorForSupervisedDataset
+\ No newline at end of file
++
++try:
++    from .train.train import LazySupervisedDataset, DataCollatorForSupervisedDataset
++except ImportError:
++    LazySupervisedDataset = None
++    DataCollatorForSupervisedDataset = None
+\ No newline at end of file

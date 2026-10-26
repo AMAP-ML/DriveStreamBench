@@ -1,0 +1,92 @@
+{
+  "summary": {
+    "total": 8,
+    "correct": 5,
+    "missing": 0,
+    "invalid": 0,
+    "no_reply": 0,
+    "accuracy": 0.625,
+    "macro_l1_l3_accuracy": 0.666667
+  },
+  "by_question_level": {
+    "L1": {
+      "total": 3,
+      "correct": 1,
+      "binary": {
+        "total": 3,
+        "correct": 1,
+        "accuracy": 0.3333333333333333
+      },
+      "mcq": {
+        "total": 0,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "no_reply": 0,
+      "accuracy": 0.3333333333333333
+    },
+    "L2": {
+      "total": 2,
+      "correct": 2,
+      "binary": {
+        "total": 2,
+        "correct": 2,
+        "accuracy": 1.0
+      },
+      "mcq": {
+        "total": 0,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "no_reply": 0,
+      "accuracy": 1.0
+    },
+    "L3": {
+      "total": 3,
+      "correct": 2,
+      "binary": {
+        "total": 3,
+        "correct": 2,
+        "accuracy": 0.6666666666666666
+      },
+      "mcq": {
+        "total": 0,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "no_reply": 0,
+      "accuracy": 0.6666666666666666
+    }
+  },
+  "by_question_type": {
+    "binary": {
+      "per_class": {
+        "NO": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "pred_total": 0,
+          "gold_total": 3
+        },
+        "YES": {
+          "precision": 0.625,
+          "recall": 1.0,
+          "f1": 0.769231,
+          "tp": 5,
+          "pred_total": 8,
+          "gold_total": 5
+        }
+      },
+      "macro_f1": 0.384615,
+      "n_scored": 8
+    },
+    "mcq": {
+      "per_class": {},
+      "macro_f1": 0.0,
+      "n_scored": 0
+    }
+  },
+  "annotation_file": "examples/toy_annotations/L1L2L3_demo.jsonl",
+  "prediction_file": "examples/toy_predictions/L1L2L3_demo_predictions.jsonl"
+}

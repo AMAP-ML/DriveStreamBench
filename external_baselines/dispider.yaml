@@ -1,0 +1,32 @@
+{
+  "name": "dispider",
+  "upstream": {
+    "url": "https://github.com/Mark12Ding/Dispider.git",
+    "commit": "8b03eda448993f491b3237f8d511ace654c0af23",
+    "license": "Apache-2.0",
+    "installation_url": "https://github.com/Mark12Ding/Dispider/blob/8b03eda448993f491b3237f8d511ace654c0af23/README.md"
+  },
+  "required_files": [
+    "dispider/model/builder.py",
+    "dispider/model/language_model/long_qwen.py",
+    "dispider/model/long_arch.py"
+  ],
+  "raw_directory": "Dispider",
+  "parser": "action_level",
+  "working_directory": ".",
+  "default_args": [
+    "--window_size",
+    "8"
+  ],
+  "paper_fps": 1,
+  "source_directories": [
+    "dispider"
+  ],
+  "vision_checkpoint": "openai/clip-vit-large-patch14",
+  "weights": {
+    "repository": "Mar2Ding/Dispider",
+    "revision": "8bcbb3a1cde4465f82c4c447a34822b7e3806768",
+    "architecture": "LongQwen2ForCausalLM",
+    "compressor_subdirectory": "stream_compressor"
+  }
+}

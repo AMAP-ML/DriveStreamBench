@@ -1,0 +1,111 @@
+{
+  "version": "1.0.0",
+  "release_url": "https://github.com/AMAP-ML/DriveStreamBench/releases/tag/v1.0.0",
+  "archive_url": "https://github.com/AMAP-ML/DriveStreamBench/releases/download/v1.0.0/DriveStreamBench-data-v1.0.0.zip",
+  "archive_filename": "DriveStreamBench-data-v1.0.0.zip",
+  "archive_sha256": "dce11aed14307fefed6438ffc1e162b50d40de4581fd970bd84ea4c512fadbfa",
+  "archive_bytes": 27882829,
+  "croissant_url": "https://github.com/AMAP-ML/DriveStreamBench/releases/download/v1.0.0/croissant.json",
+  "annotation_files": [
+    {
+      "filename": "l1_test.jsonl",
+      "archive_path": "DriveStreamBench_Core/annotations/l1_test.jsonl",
+      "question_level": "L1",
+      "split": "test",
+      "subset": "Core",
+      "row_count": 1024,
+      "byte_size": 506350,
+      "sha256": "7836aa4f25d55cb71aa6b14eddef1484bf6b6bf07aeb0fe01030acd14b765d13"
+    },
+    {
+      "filename": "l1_train.jsonl",
+      "archive_path": "DriveStreamBench_Core/annotations/l1_train.jsonl",
+      "question_level": "L1",
+      "split": "train",
+      "subset": "Core",
+      "row_count": 4843,
+      "byte_size": 2411788,
+      "sha256": "cddb6ee293cadae77e8dfbfc9e71e11f120a8630246570f4bfcb6c12b1313d1c"
+    },
+    {
+      "filename": "l2_test.jsonl",
+      "archive_path": "DriveStreamBench_Core/annotations/l2_test.jsonl",
+      "question_level": "L2",
+      "split": "test",
+      "subset": "Core",
+      "row_count": 1073,
+      "byte_size": 567688,
+      "sha256": "6af18aacd4f74d0c9a55109a19b826340f600c0732d661f74f74b3f6156ff957"
+    },
+    {
+      "filename": "l2_train.jsonl",
+      "archive_path": "DriveStreamBench_Core/annotations/l2_train.jsonl",
+      "question_level": "L2",
+      "split": "train",
+      "subset": "Core",
+      "row_count": 5211,
+      "byte_size": 2737910,
+      "sha256": "f6e558997b3e6c38e98d17ccf7dbee80c89b390c551f67d8da2a00518d5fa594"
+    },
+    {
+      "filename": "l3_test.jsonl",
+      "archive_path": "DriveStreamBench_Core/annotations/l3_test.jsonl",
+      "question_level": "L3",
+      "split": "test",
+      "subset": "Core",
+      "row_count": 1949,
+      "byte_size": 14030867,
+      "sha256": "c94459cdb94db654d74515124b74907af446fdbb49048f3dcde327868e5c25fe"
+    },
+    {
+      "filename": "l3_train.jsonl",
+      "archive_path": "DriveStreamBench_Core/annotations/l3_train.jsonl",
+      "question_level": "L3",
+      "split": "train",
+      "subset": "Core",
+      "row_count": 5003,
+      "byte_size": 36475378,
+      "sha256": "6b5ebf34376fa3dfe6a5d87c462383d4ba7e79cd3e8cc8a3070775b69e91ae0b"
+    },
+    {
+      "filename": "l4_core_test.jsonl",
+      "archive_path": "DriveStreamBench_Core/annotations/l4_core_test.jsonl",
+      "question_level": "L4",
+      "split": "test",
+      "subset": "Core",
+      "row_count": 1949,
+      "byte_size": 43713381,
+      "sha256": "7882b1d7515de36962f83c9cb61c02dd2b787e5698907366ef1b029b95ef2298"
+    },
+    {
+      "filename": "l4_core_train.jsonl",
+      "archive_path": "DriveStreamBench_Core/annotations/l4_core_train.jsonl",
+      "question_level": "L4",
+      "split": "train",
+      "subset": "Core",
+      "row_count": 5003,
+      "byte_size": 123772662,
+      "sha256": "618bc9ca871777069b9055b597186b4da6f30977373b63519fd0e2af157a6dc1"
+    },
+    {
+      "filename": "l3_ood.jsonl",
+      "archive_path": "DriveStreamBench_OOD/annotations/l3_ood.jsonl",
+      "question_level": "L3",
+      "split": "ood",
+      "subset": "OOD",
+      "row_count": 399,
+      "byte_size": 1137788,
+      "sha256": "b455c8ecde61a0cb3ab2293631a7d9a41063397e1433a32811fb16f2cbbd329a"
+    },
+    {
+      "filename": "l4_ood.jsonl",
+      "archive_path": "DriveStreamBench_OOD/annotations/l4_ood.jsonl",
+      "question_level": "L4",
+      "split": "ood",
+      "subset": "OOD",
+      "row_count": 399,
+      "byte_size": 3222611,
+      "sha256": "2d928f8196ae5d9d61b819a8a486159a9a989a036254e01df09f19fb84a7b907"
+    }
+  ]
+}

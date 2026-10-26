@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "drivestreambench"
+version = "1.0.0"
+description = "DriveStreamBench — benchmark harness for streaming watch-and-notify"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+keywords = [
+  "benchmark", "video", "streaming", "vlm", "driving", "alert",
+  "watch-and-notify", "neurips", "nuplan",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS :: MacOS X",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# Core dependencies are intentionally minimal so the package can be
+# imported (and the metric / scorer used) on a CPU-only laptop.
+dependencies = []
+
+[project.optional-dependencies]
+test  = ["pytest>=7.0", "pillow>=10.0"]
+api   = ["openai>=1.0", "httpx>=0.24"]
+vlm   = ["torch>=2.8", "transformers>=4.57", "qwen-vl-utils>=0.0.14", "vllm>=0.11", "pillow>=10.0"]
+train = ["ms-swift>=3.10,<4", "transformers>=4.57", "qwen-vl-utils>=0.0.14", "deepspeed>=0.12", "liger-kernel==0.6.4"]
+plot  = ["matplotlib>=3.7", "numpy>=1.24"]
+ci    = ["numpy>=1.24"]
+all   = [
+    "pytest>=7.0", "openai>=1.0", "httpx>=0.24", "pillow>=10.0",
+    "matplotlib>=3.7", "numpy>=1.24",
+]
+
+[project.scripts]
+dsb-validate     = "drivestreambench.data.validate:main"
+dsb-run-l4       = "drivestreambench.inference.run_l4:main"
+dsb-run-l123     = "drivestreambench.inference.run_l123:main"
+dsb-latency      = "drivestreambench.inference.latency:main"
+dsb-train-sft    = "drivestreambench.training.train_sft:main"
+dsb-build-sft    = "drivestreambench.training.build_sft_data:main"
+
+[tool.setuptools.packages.find]
+include = ["drivestreambench*"]
+exclude = ["tests*", "examples*", "scripts*", "docs*", "configs*", "manifests*"]
+
+[tool.setuptools.package-data]
+drivestreambench = ["protocol/system_prompt.txt"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-q --tb=short"

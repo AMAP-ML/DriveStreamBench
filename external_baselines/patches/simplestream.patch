@@ -1,0 +1,62 @@
+--- a/lib/recent_window_eval.py
++++ b/lib/recent_window_eval.py
+@@ -75,9 +75,18 @@
+         max_new_tokens: int = 256,
+         attn_implementation: str = "flash_attention_2",
+     ) -> None:
+-        from transformers import AutoProcessor
+-
+-        if "qwen3" in model_name.lower():
++        from transformers import AutoProcessor, AutoConfig
++
++        # Detect model type from config.json instead of relying on path name
++        _is_qwen3 = "qwen3" in model_name.lower()
++        if not _is_qwen3:
++            try:
++                _cfg = AutoConfig.from_pretrained(model_name, trust_remote_code=True)
++                _is_qwen3 = getattr(_cfg, "model_type", "").startswith("qwen3")
++            except Exception:
++                pass
++
++        if _is_qwen3:
+             from transformers.models.qwen3_vl.modeling_qwen3_vl import (
+                 Qwen3VLForConditionalGeneration as _ModelClass,
+             )
+@@ -99,12 +108,19 @@
+         if os.environ.get("MAX_PIXELS"):
+             proc_kwargs["max_pixels"] = int(os.environ["MAX_PIXELS"])
+         self.processor = AutoProcessor.from_pretrained(model_name, **proc_kwargs)
++        self.tokenizer = (
++            self.processor.tokenizer
++            if hasattr(self.processor, "tokenizer")
++            else self.processor
++        )
+ 
+         model_kwargs: dict[str, Any] = {
+             "torch_dtype": torch.bfloat16,
+             "attn_implementation": attn_implementation,
+         }
+-        if device == "auto":
++        visible_devices = os.environ.get("CUDA_VISIBLE_DEVICES", "")
++        single_visible_cuda_device = "," not in visible_devices and visible_devices.strip() != ""
++        if device == "auto" or (str(device).startswith("cuda:") and single_visible_cuda_device):
+             model_kwargs["device_map"] = "auto"
+         else:
+             model_kwargs["device_map"] = str(device)
+@@ -125,11 +141,14 @@
+         )
+         self._hf_model = _hf_model
+         self.image_token_id = _hf_model.config.image_token_id
+-        self._visual = _hf_model.visual
++        if hasattr(_hf_model, "visual"):
++            self._visual = _hf_model.visual
++        else:
++            self._visual = _hf_model.model.visual
+         self._text_model = _hf_model.model
+         self.merge_size = getattr(self._visual, "spatial_merge_size", 1)
+ 
+-        tokenizer = self.processor.tokenizer
++        tokenizer = self.tokenizer
+         self._vision_start_id = tokenizer.convert_tokens_to_ids("<|vision_start|>")
+         self._vision_end_id = tokenizer.convert_tokens_to_ids("<|vision_end|>")
+         self._im_start_id = tokenizer.convert_tokens_to_ids("<|im_start|>")

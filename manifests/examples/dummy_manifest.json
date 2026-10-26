@@ -1,0 +1,30 @@
+{
+  "manifest_version": "1.0",
+  "host": "local",
+  "python": "3.10.13",
+  "platform": "linux-x86_64",
+  "benchmark": "DriveStreamBench",
+  "benchmark_version": "1.0.0",
+  "split": "l4_core_test",
+  "model_name": "dummy_alert_on_turn",
+  "model_checkpoint": "",
+  "model_checkpoint_hash": "",
+  "protocol": "native_streaming",
+  "decision_cadence_hz": 1.0,
+  "fps": 2,
+  "frames_per_turn": 2,
+  "temperature": 0.0,
+  "max_new_tokens": 8,
+  "framework": "n/a",
+  "framework_version": "n/a",
+  "hardware": "cpu",
+  "precision": "",
+  "prediction_jsonl": "examples/toy_predictions/L4_demo_predictions.jsonl",
+  "score_json": "examples/expected_outputs/L4_demo_scores.json",
+  "median_latency_ms": 0.0,
+  "p95_latency_ms": 0.0,
+  "rtf_mean": 0.0,
+  "extra": {
+    "note": "Dummy manifest for smoke testing the manifest schema. The dummy_alert_on_turn model alerts on turn idx 4 unconditionally; no real model inference is performed."
+  }
+}

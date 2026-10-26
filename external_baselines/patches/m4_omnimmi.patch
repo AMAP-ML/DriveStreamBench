@@ -1,0 +1,217 @@
+--- a/intersuit/intersuit/model/language_model/llava_qwen.py
++++ b/intersuit/intersuit/model/language_model/llava_qwen.py
+@@ -462,51 +462,38 @@
+ 
+         
+ 
+-    # @torch.no_grad()
+-    # def generate_streaming(
+-    #     self,
+-    #     inputs_embeds: Optional[torch.Tensor] = None,
+-    #     past_key_values=None,
+-    #     **kwargs,
+-    # ) -> Union[GenerateOutput, torch.LongTensor]:
+-        
+-    #     streamer = kwargs.pop("streamer", None)
+-    #     tokenizer = kwargs.pop("tokenizer", None)
+-    #     attention_mask = kwargs.pop("attention_mask", None)
+-        
+-    #     max_new_tokens = kwargs.pop("max_new_tokens", 64)
+-    #     for idx in range(max_new_tokens):
+-            
+-    #         outputs = super().forward(
+-    #             # attention_mask=attention_mask,
+-    #             past_key_values=past_key_values,
+-    #             # cache_position=cache_position,
+-    #             inputs_embeds=inputs_embeds,
+-    #             use_cache=True,
+-    #         )
+-            
+-    #         # greedy sample
+-    #         next_token_ids = outputs.logits[:, -1:].argmax(-1)
+-    #         if idx == 0:
+-    #             outputs_ids = next_token_ids
+-    #         else:
+-    #             outputs_ids = torch.cat([outputs_ids, next_token_ids], dim=-1)
+-    #         # if tokenizer is not None:
+-    #         #     print(tokenizer.decode(next_token_ids.squeeze(0), skip_special_tokens=True), end='', flush=True)
+-    #         # if streamer is not None:
+-    #         #     streamer.stream(output_ids=next_token_ids)
+-    #         inputs_embeds = self.get_model().embed_tokens(next_token_ids)
+-    #         # print(inputs_embeds.shape)
+-    #         # inputs_embeds = torch.cat([inputs_embeds, next_inputs_embeds], dim=1)
+-    #         # attention_mask = torch.cat([attention_mask, attention_mask.new_ones((bsz, 1))], dim=-1)
+-    #         # cache_position = cache_position[-1:] + 1
+-    #         # cache_position = torch.cat([cache_position, cache_position.new_])
+-            
+-    #         if next_token_ids.squeeze(0)[0].item() == tokenizer.eos_token_id:
+-    #             # print("="*20,"COMPLETE","="*20)
+-    #             break
+-
+-    #     return outputs_ids, past_key_values
++    @torch.no_grad()
++    def generate_streaming(
++        self,
++        inputs_embeds: Optional[torch.Tensor] = None,
++        past_key_values=None,
++        **kwargs,
++    ) -> Union[GenerateOutput, torch.LongTensor]:
++
++        tokenizer = kwargs.pop("tokenizer", None)
++        kwargs.pop("streamer", None)
++        kwargs.pop("attention_mask", None)
++
++        max_new_tokens = kwargs.pop("max_new_tokens", 64)
++        for idx in range(max_new_tokens):
++
++            outputs = super().forward(
++                past_key_values=past_key_values,
++                inputs_embeds=inputs_embeds,
++                use_cache=True,
++            )
++
++            next_token_ids = outputs.logits[:, -1:].argmax(-1)
++            if idx == 0:
++                outputs_ids = next_token_ids
++            else:
++                outputs_ids = torch.cat([outputs_ids, next_token_ids], dim=-1)
++            inputs_embeds = self.get_model().embed_tokens(next_token_ids)
++
++            if next_token_ids.squeeze(0)[0].item() == tokenizer.eos_token_id:
++                break
++
++        return outputs_ids, past_key_values
+ 
+ 
+     
+--- a/intersuit/local_demo/inference.py
++++ b/intersuit/local_demo/inference.py
+@@ -24,7 +24,7 @@
+ from intersuit.conversation import conv_templates, SeparatorStyle
+ from intersuit.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN
+ from intersuit.mm_utils import get_model_name_from_path, process_images, tokenizer_image_token, KeywordsStoppingCriteria
+-from intersuit.vid_utils import load_video
++from intersuit.vid_utils import load_video, sample_frames
+ from intersuit.model.builder import load_pretrained_model
+ from .arguments_live import parse_args
+ from .inference_util import MaxHeapDict
+@@ -45,6 +45,7 @@
+         overwrite_config = {}
+         overwrite_config["mm_spatial_pool_stride"] = 2
+         overwrite_config["mm_spatial_pool_mode"] = "average"
++        overwrite_config["mm_vision_tower"] = args.vision_pretrained
+         llava_model_args["overwrite_config"] = overwrite_config
+         self.tokenizer, self.model, self.processor, self.context_len = load_pretrained_model(args.model_path, None, model_name, device_map=args.device, **llava_model_args)
+         if 'qwen' in args.model_path.lower():
+@@ -59,6 +60,7 @@
+             print('[WARNING] the auto inferred conversation mode is {}, while `--conv-mode` is {}, using {}'.format(conv_mode, args.conv_mode, args.conv_mode))
+         else:
+             args.conv_mode = conv_mode
++        self.conv_mode = args.conv_mode
+         self.conv = conv_templates[args.conv_mode].copy()
+             
+         
+@@ -72,6 +74,7 @@
+         # self.hidden_size = self.model.config.hidden_size
+         self.frame_fps = args.frame_fps
+         self.frame_interval = 1 / self.frame_fps
++        self.max_num_frames = args.max_num_frames
+         self.frame_resolution = args.frame_resolution
+         # self.frame_resolution = self.model.config.frame_resolution
+         # self.frame_num_tokens = self.model.config.frame_num_tokens
+@@ -311,8 +314,10 @@
+         self.video_time = 0
+         self.last_frame_idx = -1
+         self.video_tensor = None
+-        self.last_ids = torch.tensor([[]], device='cuda', dtype=torch.long)
++        self.last_ids = torch.tensor([[]], device=self.device, dtype=torch.long)
+         self.past_key_values = None
++        if hasattr(self, 'conv_mode'):
++            self.conv = conv_templates[self.conv_mode].copy()
+ 
+     def input_query_stream(self, query, history=None, video_time=None):
+         if video_time is None:
+@@ -358,10 +363,33 @@
+             video_tensor = load_video(video_path, fps=self.frame_fps, max_frames=512) # T H W C
+         self.video_tensor = self.processor.preprocess(video_tensor, return_tensors="pt")['pixel_values'].to(torch.bfloat16).to(self.device)
+         
+-        # print(self.video_tensor.shape)
+         self.num_video_frames = self.video_tensor.shape[0]
+         self.video_duration = self.video_tensor.shape[0] / self.frame_fps
+         logger.warning(f'{video_path} -> {self.video_tensor.shape}, {self.frame_fps} FPS')
++
++    def load_frames_from_paths(self, image_paths):
++        """Load frames from a list of image file paths (for proactive video QA evaluation)."""
++        from PIL import Image
++
++        selected_paths = list(image_paths)
++        total_frames = len(selected_paths)
++        if self.max_num_frames and total_frames > self.max_num_frames:
++            sampled_indices = sample_frames(self.max_num_frames, total_frames, sample='uniform')
++            selected_paths = [selected_paths[idx] for idx in sampled_indices]
++            logger.warning(
++                f'Capped frame-path sample from {total_frames} to {len(selected_paths)} frames '
++                f'(max_num_frames={self.max_num_frames})'
++            )
++
++        frames = []
++        for p in selected_paths:
++            img = Image.open(p).convert('RGB')
++            frames.append(np.array(img))
++        video_tensor = np.stack(frames, axis=0)  # (T, H, W, C)
++        self.video_tensor = self.processor.preprocess(video_tensor, return_tensors="pt")['pixel_values'].to(torch.bfloat16).to(self.device)
++        self.num_video_frames = self.video_tensor.shape[0]
++        self.video_duration = self.num_video_frames / self.frame_fps
++        logger.warning(f'Loaded {len(selected_paths)} / {total_frames} frames -> {self.video_tensor.shape}, {self.frame_fps} FPS')
+ 
+     def __call__(self, ):
+         while not self.frame_embeds_queue:
+--- a/intersuit/local_demo/arguments_live.py
++++ b/intersuit/local_demo/arguments_live.py
+@@ -1,6 +1,13 @@
+ from dataclasses import dataclass, field
+ from transformers import TrainingArguments
+ from transformers import HfArgumentParser
++import os
++
++DEFAULT_M4_ROOT = os.environ.get("M4_CHECKPOINT_ROOT", "checkpoints/M4")
++DEFAULT_M4_VISION = os.environ.get(
++    "M4_VISION_CHECKPOINT",
++    os.path.join(DEFAULT_M4_ROOT, "clip-vit-large-patch14-336"),
++)
+ 
+ @dataclass
+ class LiveTrainingArguments(TrainingArguments):
+@@ -13,7 +20,7 @@
+     eval_datasets: list[str] = None
+     stream_loss_weight: float = 1.0
+     llm_pretrained: str = 'Qwen2-7B-Instruct'
+-    vision_pretrained: str = 'clip-vit-large-patch14-336'
++    vision_pretrained: str = DEFAULT_M4_VISION
+     lora_modules: str = "model.*(q_proj|k_proj|v_proj|o_proj|gate_proj|up_proj|down_proj)|lm_head$"
+     lora_r: int = 128
+     lora_alpha: int = 256
+@@ -22,6 +29,7 @@
+     frame_token_cls: bool = None
+     frame_token_pooled: list[int] = None
+     frame_resolution: int = 336
++    max_num_frames: int = 512
+     frame_token_interval: str  = None
+     frame_token_interval_threshold: float = 0.0
+     augmentation: bool = False
+@@ -30,7 +38,7 @@
+     output_dir: str = 'outputs/debug'
+     
+     # InterSuit parameters
+-    model_path: str = "ColorfulAI/M4"
++    model_path: str = DEFAULT_M4_ROOT
+     model_base: str = None
+     video_file: str = None
+     # device: str = "cuda"
+@@ -81,4 +89,4 @@
+ def parse_args() -> LiveTrainingArguments:
+     args, = HfArgumentParser(LiveTrainingArguments).parse_args_into_dataclasses()
+     args, = HfArgumentParser(get_args_class(args.live_version)).parse_args_into_dataclasses()
+-    return args
+\ No newline at end of file
++    return args
